@@ -6,7 +6,16 @@
   height: 40vmin;
   pointer-events: none;
 }
+.header {
+  color:white;
+  background-color: lightgray;
+  font-size: 40px;
+  /*font-weight: bold;*/
+}
+.btn {
+  color: white;
 
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -27,6 +36,7 @@
 .App-link {
   color: #61dafb;
 }
+
 
 @keyframes App-logo-spin {
   from {

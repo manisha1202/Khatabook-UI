@@ -10,13 +10,11 @@ class Home extends Component {
             phone_number: null,
             password: null,
             isRegister: false,
-            token: null,
-            contact: null
+            token: null
         }
     }
 
     login() {
-        //console.log(this.state.phone_number);
         fetch('http://localhost:8080/login', {
             method: "POST",
             headers: {
@@ -26,21 +24,20 @@ class Home extends Component {
             body: JSON.stringify(this.state)
         }).then((response) =>
             response.text()).then((res) => {
-            console.log("abc: "+ this.state.phone_number);
+            console.log("abc: " + this.state.phone_number);
             if (res.length > 0) {
                 localStorage.setItem("auth", JSON.stringify({
                     token: res,
-                    contact: this.state.phone_number
+                    phone_number: this.state.phone_number
                 }));
                 console.log("yes");
                 this.setState({
-                    token:res
+                    token: res
                 });
             } else {
                 alert("Invalid credentials");
             }
         })
-        //console.log(this.state.phone_number);
     }
 
     register() {
@@ -60,11 +57,11 @@ class Home extends Component {
     }
 
     render() {
-        let auth=JSON.parse(localStorage.getItem('auth'));
+        let auth = JSON.parse(localStorage.getItem('auth'));
         return (
             <div>
                 {
-                    auth?<Redirect to={"/dashboard"}></Redirect>:null
+                    auth ? <Redirect to={"/dashboard"}></Redirect> : null
                 }
                 <div className="header">KHATABOOK</div>
                 <br/>
@@ -82,6 +79,7 @@ class Home extends Component {
                                             phone_number: event.target.value
                                         })
                                     }}
+                                    required
                                 /><br/><br/>
                                 <input
                                     type="password"
@@ -91,6 +89,7 @@ class Home extends Component {
                                             password: event.target.value
                                         })
                                     }}
+                                    required
                                 /><br/>
                                 <a href="www.google.com">Forgot Password</a><br/><br/>
                                 <Button type="submit" onClick={() => {
@@ -143,6 +142,9 @@ class Home extends Component {
                                         })
                                     }}
                                 /><br/><br/>
+                                <Form.Group>
+                                    <Form.File id="exampleFormControlFile1" label="Add Profile photo"/>
+                                </Form.Group>
                                 <Button type="submit" onClick={() => {
                                     this.register()
                                 }}>Register</Button>

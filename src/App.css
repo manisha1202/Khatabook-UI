@@ -37,7 +37,27 @@
   color: #61dafb;
 }
 
+#wrap {
+  display: flex;
+  justify-content: center;
+  padding: 0.5%;
+  width: 100%;
+}
 
+#left, #right {
+  padding: 2%;
+  margin-left: 12%;
+}
+.list-group-item {
+  max-height: 250px;
+  /*margin-bottom: 10px;*/
+  /*overflow:scroll;*/
+  /*-webkit-overflow-scrolling: touch;*/
+  overflow-y:auto
+}
+.borderless {
+  border-top: 0 none;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

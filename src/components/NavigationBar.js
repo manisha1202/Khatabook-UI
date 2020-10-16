@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import {Button, Form, FormControl, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus, faUser} from "@fortawesome/free-solid-svg-icons";
+import AddKhatabook from "./AddKhatabook";
 
 class NavigationBar extends Component {
     constructor(props) {
         super(props);
 
-        this.state={
-            currentKhatabookName:"Khatabooks"
+        this.state = {
+            currentKhatabookName: "Khatabooks",
+            khatabookList: []
         }
     }
 
@@ -17,12 +19,47 @@ class NavigationBar extends Component {
         window.location.href = "http://localhost:3000/";
     }
 
+    componentWillMount() {
+        fetch('http://localhost:8080/khatabooks', {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({phone_number: this.props.userPhNum})
+        }).then((response) => {
+            response.json().then((res) => {
+                this.setState({
+                    khatabookList: res.khatabooks
+                });
+            })
+        })
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+
+        fetch('http://localhost:8080/khatabooks', {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({phone_number: nextProps.userPhNum})
+        }).then((response) => {
+            response.json().then((res) => {
+                this.setState({
+                    khatabookList: res.khatabooks
+                });
+            })
+        })
+    }
+
     render() {
-        var khatabookNames = this.props.khatabookList.map((item) =>
-            <NavDropdown.Item onClick={()=>{
+        var khatabookNames = this.state.khatabookList.map((item) =>
+            <NavDropdown.Item onClick={() => {
                 this.props.khatabookIdHandler(item.id);
                 this.setState({
-                    currentKhatabookName:item.name
+                    currentKhatabookName: item.name
                 });
 
             }}>{item.name}
@@ -37,7 +74,12 @@ class NavigationBar extends Component {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
                             <Nav.Link href="#home">Home</Nav.Link>
-                            <Nav.Link href="#link"><FontAwesomeIcon icon={faPlus}/> Add Khatabook</Nav.Link>
+                            <Nav.Link onClick={() => {
+                                this.props.handleKhatabookModalTrigger()
+                            }}><FontAwesomeIcon icon={faPlus}/> Add Khatabook</Nav.Link>
+                            {this.props.show && <AddKhatabook handleKhatabookModalTrigger={
+                                this.props.handleKhatabookModalTrigger} show={this.props.show}/>
+                            }
                             <NavDropdown title={this.state.currentKhatabookName} id="basic-nav-dropdown">
                                 {khatabookNames}
                             </NavDropdown>

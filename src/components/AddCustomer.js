@@ -7,7 +7,8 @@ class AddCustomer extends Component {
         this.state = {
             customer_Name: "",
             phone_Number: "",
-            loan_amount: 0
+            amount: 0,
+            type:"credit"
         }
     }
 
@@ -22,7 +23,8 @@ class AddCustomer extends Component {
                 khatabookId:this.props.khatabookId,
                 customerName:this.state.customer_Name,
                 phoneNumber:this.state.phone_Number,
-                loanAmount:this.state.loan_amount
+                amount:this.state.amount,
+                type:this.state.type
             })
         }).then((response) => {
             // response.json().then((res) => {
@@ -66,7 +68,7 @@ class AddCustomer extends Component {
                         <input type="text"
                                onChange={(event) => {
                                    this.setState({
-                                       loan_amount: event.target.value
+                                       amount: event.target.value
                                    })
                                }}
                                defaultValue="&#8377; 0.0"

@@ -6,6 +6,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import AddCustomer from "./AddCustomer";
 import Balance from "./Balance";
 import CustomerList from "./CustomerList";
+import AddTransaction from "./AddTransaction";
 
 
 export default class Dashboard extends Component {
@@ -13,11 +14,10 @@ export default class Dashboard extends Component {
         super();
         this.state = {
             show: false,
-            khatabookList: [],
-            khatabookId:null
+            khatabookId: null
         }
-        this.populateData=this.populateData.bind(this);
-        this.handleModalTrigger=this.handleModalTrigger.bind(this);
+        this.populateData = this.populateData.bind(this);
+        this.handleModalTrigger = this.handleModalTrigger.bind(this);
     }
 
     handleModalTrigger() {
@@ -26,38 +26,24 @@ export default class Dashboard extends Component {
         })
     }
 
-    componentWillMount() {
-        let data = JSON.parse(localStorage.getItem('auth'));
-        fetch('http://localhost:8080/khatabooks', {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({"phone_number": data.phone_number})
-        }).then((response) => {
-            response.json().then((res) => {
-                this.setState({
-                    khatabookList: res.khatabooks
-                });
-            })
-        })
-    }
-    populateData(id){
-        localStorage.setItem("khatabookId",id);
+
+    populateData(id) {
+        localStorage.removeItem("khatabookId");
+        localStorage.setItem("khatabookId", id);
         this.setState({
-           khatabookId:id
+            khatabookId: id
         });
     }
 
     render() {
-        console.log("dashboard: "+this.state.khatabookId);
+        let userPhNum = JSON.parse(localStorage.getItem('auth')).phone_number;
         return (
             <div>
-                <NavigationBar khatabookIdHandler={this.populateData} khatabookList={this.state.khatabookList}/>
+                <NavigationBar khatabookIdHandler={this.populateData} userPhNum={userPhNum}
+                               handleKhatabookModalTrigger={this.handleModalTrigger} show={this.state.show}/>
                 {
-                    this.state.khatabookId!==null ?
-                        ( <div>
+                    this.state.khatabookId !== null ?
+                        (<div>
                             <Balance khatabookId={this.state.khatabookId}/>
                             <hr/>
                             <CustomerList khatabookId={this.state.khatabookId}/>
@@ -65,7 +51,7 @@ export default class Dashboard extends Component {
                             <Button variant="danger" onClick={() => {
                                 this.handleModalTrigger()
                             }}><FontAwesomeIcon icon={faPlus}/> Add Customer</Button>
-                            {this.state.show && <AddCustomer  khatabookId={this.state.khatabookId} handleModalTrigger={
+                            {this.state.show && <AddCustomer khatabookId={this.state.khatabookId} handleModalTrigger={
                                 this.handleModalTrigger} show={this.state.show}/>
                             }
                         </div>)

@@ -16,7 +16,6 @@ class Balance extends Component {
         alert("Money is coming to you!!!")
     }
     componentWillMount() {
-        console.log("balance will mount"+this.props.khatabookId);
         fetch('http://localhost:8080/balance', {
             method: "POST",
             headers: {
@@ -37,7 +36,6 @@ class Balance extends Component {
     }
 
     componentWillReceiveProps(nextProps,nextContext) {
-        console.log("balance will recieve"+nextProps.khatabookId);
         fetch('http://localhost:8080/balance', {
                 method: "POST",
                 headers: {
@@ -49,7 +47,6 @@ class Balance extends Component {
                 })
             }).then((response) => {
                 response.json().then((res) => {
-                    console.log(res.credit+" , "+res.debit);
                     this.setState({
                         credit:res.credit,
                         debit:res.debit
@@ -59,7 +56,6 @@ class Balance extends Component {
     }
 
     render() {
-        console.log("balance render: "+this.props.khatabookId);
         return (
             <div>
                 <div className="row" id="wrap">

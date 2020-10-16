@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
 import {ListGroup} from "react-bootstrap";
+import {Redirect} from "react-router-dom";
 
 class CustomerList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            customerList: []
+            customerList: [],
+            isRedirect: false
         }
     }
 
     getDetail() {
         alert("details");
     }
+
     componentWillMount() {
-         // console.log("customer list will: "+this.props.khatabookId);
         fetch('http://localhost:8080/customerList', {
             method: "POST",
             headers: {
@@ -29,14 +31,12 @@ class CustomerList extends Component {
                 this.setState({
                     customerList: res.customers
                 });
-                //console.log(JSON.stringify(res));
             })
 
         })
     }
 
-    componentWillReceiveProps(nextProps,nextContext){
-         // console.log("customer list recieve: "+this.props.khatabookId);
+    componentWillReceiveProps(nextProps, nextContext) {
         fetch('http://localhost:8080/customerList', {
             method: "POST",
             headers: {
@@ -58,19 +58,26 @@ class CustomerList extends Component {
     }
 
     render() {
-        // console.log("customer list render: "+this.props.khatabookId);
+        if (this.state.isRedirect) {
+            return <Redirect to={"/dashboard/transaction"}/>
+        }
         var customersList = this.state.customerList.map((item) =>
-            <ListGroup.Item onClick={() => {
-                this.getDetail()
-            }}>
-                <ListGroup horizontal>
+            // <ListGroup.Item>
+                <ListGroup horizontal onClick={() => {
+                    localStorage.removeItem("customerId");
+                    localStorage.setItem("customerId", item.id);
+                    this.setState({
+                        isRedirect: true
+                    });
+                }}>
                     <ListGroup.Item className="borderless" action variant="warning">{item.name}</ListGroup.Item>
                     <ListGroup.Item action variant="warning">&#8377; {item.amount}</ListGroup.Item>
-                    {/*<ListGroup.Item action variant="warning">{item.date}</ListGroup.Item>*/}
                 </ListGroup>
-            </ListGroup.Item>
+
+            // </ListGroup.Item>
         );
         return (
+
             <div>
                 <ListGroup className="list-group-item">
                     {customersList}
